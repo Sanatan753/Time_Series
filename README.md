@@ -125,12 +125,7 @@ Sanatan Kisku
 
 ## License
 
-This project is licensed under the MIT License.
+This project was presented to us at the AI/ML workshop 
 
 ## Contact
-
-For any queries, please contact Sanatan Kisku.
-
----
-
-Feel free to customize this README file as per your requirements.
+You can Reachout to me through my LinkedIn 
