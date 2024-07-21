@@ -10,7 +10,6 @@ import seaborn as sns
 
 warnings.filterwarnings("ignore")
 
-
 def get_Patterns(TSeries, n_inputs, h):
     X, y = pd.DataFrame(np.zeros((len(TSeries) - n_inputs - h + 1, n_inputs))), pd.DataFrame()
     for i in range(len(TSeries)):
@@ -23,14 +22,12 @@ def get_Patterns(TSeries, n_inputs, h):
         y = pd.concat([y, TSeries.iloc[end_ix]], ignore_index=True)
     return pd.DataFrame(X), pd.DataFrame(y)
 
-
 def minmaxNorm(originalData, lenTrainValidation):
     max2norm = max(originalData.iloc[0:lenTrainValidation, 0])
     min2norm = min(originalData.iloc[0:lenTrainValidation, 0])
     lenOriginal = len(originalData)
     normalizedData = [(originalData.iloc[i] - min2norm) / (max2norm - min2norm) for i in range(lenOriginal)]
     return pd.DataFrame(normalizedData)
-
 
 def minmaxDeNorm(originalData, forecastedData, lenTrainValidation):
     max2norm = max(originalData.iloc[0:lenTrainValidation, 0])
@@ -39,7 +36,6 @@ def minmaxDeNorm(originalData, forecastedData, lenTrainValidation):
     denormalizedData = [(forecastedData.iloc[i] * (max2norm - min2norm)) + min2norm for i in range(lenOriginal)]
     return pd.DataFrame(denormalizedData)
 
-
 def findRMSE(Timeseries_Data, forecasted_value, lenTrainValidation):
     l = Timeseries_Data.shape[0]
     lenTest = l - lenTrainValidation
@@ -47,14 +43,12 @@ def findRMSE(Timeseries_Data, forecasted_value, lenTrainValidation):
     testRMSE = np.sqrt(np.mean((forecasted_value.iloc[lenTrainValidation:, 0] - Timeseries_Data.iloc[lenTrainValidation:, 0]) ** 2))
     return trainRMSE, testRMSE
 
-
 def findMAE(Timeseries_Data, forecasted_value, lenTrainValidation):
     l = Timeseries_Data.shape[0]
     lenTest = l - lenTrainValidation
     trainMAE = np.mean(np.abs(forecasted_value.iloc[:lenTrainValidation, 0] - Timeseries_Data.iloc[:lenTrainValidation, 0]))
     testMAE = np.mean(np.abs(forecasted_value.iloc[lenTrainValidation:, 0] - Timeseries_Data.iloc[lenTrainValidation:, 0]))
     return trainMAE, testMAE
-
 
 def Find_Fitness(x, y, lenValid, lenTest, model):
     NOP = y.shape[0]
@@ -69,11 +63,12 @@ def Find_Fitness(x, y, lenValid, lenTest, model):
     yhatNorm = model.predict(x).flatten().reshape(x.shape[0], 1)
     return pd.DataFrame(yhatNorm)
 
-
 class TimeSeriesApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Time Series Analysis and Forecasting")
+        self.root.geometry("600x400")
+        self.root.configure(bg="white")
 
         self.timeseries_data = None
         self.model = LinearRegression()
@@ -81,23 +76,23 @@ class TimeSeriesApp:
         self.create_widgets()
 
     def create_widgets(self):
-        self.upload_button = tk.Button(self.root, text="Upload Data", command=self.upload_data)
-        self.upload_button.pack()
+        self.upload_button = tk.Button(self.root, text="Upload Data", command=self.upload_data, font=("Arial", 12))
+        self.upload_button.pack(pady=10)
 
-        self.analyze_button = tk.Button(self.root, text="Analyze", command=self.analyze)
-        self.analyze_button.pack()
+        self.analyze_button = tk.Button(self.root, text="Analyze", command=self.analyze, font=("Arial", 12))
+        self.analyze_button.pack(pady=10)
 
-        self.forecast_label = tk.Label(self.root, text="Enter the number of steps to forecast:")
-        self.forecast_label.pack()
+        self.forecast_label = tk.Label(self.root, text="Enter the number of steps to forecast:", font=("Arial", 12), bg="white")
+        self.forecast_label.pack(pady=10)
 
-        self.forecast_entry = tk.Entry(self.root)
-        self.forecast_entry.pack()
+        self.forecast_entry = tk.Entry(self.root, font=("Arial", 12))
+        self.forecast_entry.pack(pady=10)
 
-        self.forecast_button = tk.Button(self.root, text="Forecast", command=self.forecast)
-        self.forecast_button.pack()
+        self.forecast_button = tk.Button(self.root, text="Forecast", command=self.forecast, font=("Arial", 12))
+        self.forecast_button.pack(pady=10)
 
-        self.text = tk.Text(self.root)
-        self.text.pack()
+        self.text = tk.Text(self.root, font=("Arial", 12), height=10, width=70)
+        self.text.pack(pady=10)
 
     def upload_data(self):
         file_path = filedialog.askopenfilename()
@@ -108,7 +103,7 @@ class TimeSeriesApp:
             messagebox.showwarning("Warning", "No file selected")
 
     def analyze(self):
-        if hasattr(self, 'timeseries_data'):
+        if self.timeseries_data is not None:
             plt.title("Autocorrelation Plot")
             plt.xlabel("Lags")
             plt.acorr(np.array(self.timeseries_data.iloc[:, 0], dtype=float), maxlags=20)
@@ -154,7 +149,7 @@ class TimeSeriesApp:
     def forecast(self):
         try:
             steps = int(self.forecast_entry.get())
-            if not self.timeseries_data:
+            if self.timeseries_data is None:
                 messagebox.showwarning("Warning", "Please load data first")
                 return
 
@@ -179,8 +174,7 @@ class TimeSeriesApp:
             forecast_values = yhat.iloc[-steps:].values.flatten()
             self.text.insert(tk.END, f"Forecast for next {steps} steps: {forecast_values}\n")
         except ValueError:
-            messagebox.showwarning("Warning", "Please enter a valid number of steps")
-
+            messagebox.showerror("Error", "Please enter a valid number of steps")
 
 if __name__ == "__main__":
     root = tk.Tk()
