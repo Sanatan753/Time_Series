@@ -18,13 +18,13 @@ Ensure you have the following packages installed:
 You can install these packages using pip:
 
 ```bash
-pip install numpy pandas scikit-learn matplotlib seaborn
+pip install numpy pandas scikit-learn matplotlib seaborn openpyxl
 ```
 
 ## Project Structure
 
 - `Lynx.csv`: The dataset containing historical time series data.
-- `main.py`: The main Python script that includes all the functions and execution logic for the time series forecasting.
+- `Time-series-GUI.py`: The main Python script that includes all the functions and execution logic for the time series forecasting.
 - `LinearRegression_Accuracy.xlsx`: Excel file that stores the accuracy metrics of the Linear Regression model.
 - `LinearRegression_Forecasts.xlsx`: Excel file that stores the forecasted values of the Linear Regression model.
 
@@ -109,10 +109,10 @@ Trains the model and predicts values.
 
 ## Usage
 
-Run the main script `main.py` to execute the time series forecasting and evaluation:
+Run the main script `Time-series-GUI.py` to execute the time series forecasting and evaluation:
 
 ```bash
-python main.py
+python Time-series-GUI.py
 ```
 
 ## Visualization
